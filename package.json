@@ -1,0 +1,16 @@
+{
+  "name": "demoqa-tests",
+  "version": "1.0.0",
+  "description": "demoqa.com Selenium tests",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --recursive --timeout 10000 test.js"
+  },
+  "author": "Agnieszka Burczyk",
+  "license": "MIT",
+  "devDependencies": {
+    "chromedriver": "^79.0.0",
+    "mocha": "^6.2.2",
+    "selenium-webdriver": "^4.0.0-alpha.5"
+  }
+}
