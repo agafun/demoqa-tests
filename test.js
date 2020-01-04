@@ -12,7 +12,7 @@ describe('Testing demoqa.com', function() {
     before(async function() {
         actions = await driver.actions();
     });
-
+    
     describe('General tests on demoqa.com', function() {
 
         it('Check title of demoqa.com', async function() {
@@ -121,6 +121,51 @@ describe('Testing demoqa.com', function() {
     //         await driver.get('https://demoqa.com/droppable/');
     //         let webElementFrom = await driver.findElement(By.id('draggable'));
     //     });
+    });
+
+
+    describe('Test the Checkboxradio', function(){
+        it('After selecting New York, Paris and London in Radio Group only London is selected', async function() {
+            await driver.get('https://demoqa.com/checkboxradio/');
+            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset/label[1]")).click();
+            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset/label[2]")).click();
+            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset/label[3]")).click();
+            let londonClassActive = await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset/label[3]")).getAttribute('class');
+            let radioCheckboxClassActive = 'ui-checkboxradio-label ui-corner-all ui-button ui-widget ui-checkboxradio-radio-label ui-state-focus ui-visual-focus ui-checkboxradio-checked ui-state-active';
+            assert.equal(londonClassActive, radioCheckboxClassActive);
+        });
+
+        it('After checking 2 Star, 3 Star, 4 Star and 5 Star and unchecking 4 Star in Checkbox only 2 Star, 3 Star and 5 Star are checked', async function() {
+            await driver.get('https://demoqa.com/checkboxradio/');
+            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[2]/label[1]")).click();
+            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[2]/label[2]")).click();
+            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[2]/label[3]")).click();
+            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[2]/label[4]")).click();
+            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[2]/label[3]")).click();
+            let star2ClassActive = await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[2]/label[1]")).getAttribute('class');
+            let star3ClassActive = await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[2]/label[2]")).getAttribute('class');
+            let star5ClassActive = await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[2]/label[4]")).getAttribute('class');
+            let checkboxClassActive = 'ui-checkboxradio-label ui-corner-all ui-button ui-widget ui-checkboxradio-checked ui-state-active';
+            assert.equal(star2ClassActive, checkboxClassActive);
+            assert.equal(star3ClassActive, checkboxClassActive);
+            assert.equal(star5ClassActive, checkboxClassActive);
+        });
+
+        it('After checking 2 Double, 2 Queen, 1 Queen, 1 King and unchecking 2 Double in Checkbox only 2 Queen, 1 Queen and 1 King are checked', async function() {
+            await driver.get('https://demoqa.com/checkboxradio/');
+            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[3]/label[1]")).click();
+            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[3]/label[2]")).click();
+            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[3]/label[3]")).click();
+            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[3]/label[4]")).click();
+            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[3]/label[1]")).click();
+            let queen2ClassActive = await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[3]/label[2]")).getAttribute('class');
+            let queen1ClassActive = await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[3]/label[3]")).getAttribute('class');
+            let king1ClassActive = await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[3]/label[4]")).getAttribute('class');
+            let nestedCheckboxClassActive = 'ui-checkboxradio-label ui-corner-all ui-button ui-widget ui-checkboxradio-checked ui-state-active';
+            assert.equal(queen2ClassActive, nestedCheckboxClassActive);
+            assert.equal(queen1ClassActive, nestedCheckboxClassActive);
+            assert.equal(king1ClassActive, nestedCheckboxClassActive);
+        });
     });
 
     // describe('', function(){
