@@ -172,19 +172,50 @@ describe('Testing demoqa.com', function() {
     });
     
 
-    // describe('Test the Selectable', function(){
-    //     it('', async function() {
+    describe('Test the Selectable', function(){
+        it('After selecting Item 1, Item 1 is highlighted in orange', async function() {
+            await driver.get('https://demoqa.com/selectable/');
+            await driver.findElement(By.xpath("//ol[@id='selectable']/li[1]")).click();
+            let selectedItem1 = await driver.findElement(By.xpath("//ol[@id='selectable']/li[1]")).getAttribute('class');
+            let selected = 'ui-widget-content ui-selectee ui-selected';
+            assert.equal(selectedItem1, selected);
+        });
 
-    //     });
+        it('After selecting Item 7, Item 7 is highlighted in orange', async function() {
+            await driver.get('https://demoqa.com/selectable/');
+            await driver.findElement(By.xpath("//ol[@id='selectable']/li[7]")).click();
+            let selectedItem7 = await driver.findElement(By.xpath("//ol[@id='selectable']/li[7]")).getAttribute('class');
+            let selected = 'ui-widget-content ui-selectee ui-selected';
+            assert.equal(selectedItem7, selected);
+        });
 
-    //     it('', async function() {
+        it('After selecting Item 4 to 7 by dragging a mouse, Item 4, 5, 6 and 7 are highlighted in orange', async function() {
+            await driver.get('https://demoqa.com/selectable/');
+            let selectFrom = await driver.findElement(By.xpath("//ol[@id='selectable']/li[4]"));
+            let selectTo = await driver.findElement(By.xpath("//ol[@id='selectable']/li[7]"));
+            await actions.dragAndDrop(selectFrom, selectTo).perform();
+            let selectedItem4 = await driver.findElement(By.xpath("//ol[@id='selectable']/li[4]")).getAttribute('class');
+            let selectedItem5 = await driver.findElement(By.xpath("//ol[@id='selectable']/li[5]")).getAttribute('class');
+            let selectedItem6 = await driver.findElement(By.xpath("//ol[@id='selectable']/li[6]")).getAttribute('class');
+            let selectedItem7 = await driver.findElement(By.xpath("//ol[@id='selectable']/li[7]")).getAttribute('class');
+            let selected = 'ui-widget-content ui-selectee ui-selected';
+            assert.equal(selectedItem4, selected);
+            assert.equal(selectedItem5, selected);
+            assert.equal(selectedItem6, selected);
+            assert.equal(selectedItem7, selected);
+        });
 
-    //     });
-
-    //     it('', async function() {
-
-    //     });
-    // });
+        it('After selecting Item 4 to 7 by dragging a mouse and selecting Item 7 once again, only Item 7 is highlighted in orange', async function() {
+            await driver.get('https://demoqa.com/selectable/');
+            let selectFrom4 = await driver.findElement(By.xpath("//ol[@id='selectable']/li[4]"));
+            let selectTo7 = await driver.findElement(By.xpath("//ol[@id='selectable']/li[7]"));
+            await actions.dragAndDrop(selectFrom4, selectTo7).perform();
+            await driver.findElement(By.xpath("//ol[@id='selectable']/li[7]")).click();
+            let selectedItem7 = await driver.findElement(By.xpath("//ol[@id='selectable']/li[7]")).getAttribute('class');
+            let selected = 'ui-widget-content ui-selectee ui-selected';
+            assert.equal(selectedItem7, selected);
+        });
+    });
 
     // describe('', function(){
     //     it('', async function() {
