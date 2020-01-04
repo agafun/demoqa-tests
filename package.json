@@ -4,7 +4,7 @@
   "description": "demoqa.com Selenium tests",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --recursive --timeout 10000 test.js"
+    "test": "mocha --recursive --timeout 20000 test.js"
   },
   "author": "Agnieszka Burczyk",
   "license": "MIT",
