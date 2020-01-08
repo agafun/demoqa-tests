@@ -13,9 +13,9 @@ describe('Testing demoqa.com', function() {
         actions = await driver.actions();
     });
     
-    describe('General tests on demoqa.com', function() {
+    describe('Test title, internal and external links', function() {
 
-        it('Check title of demoqa.com', async function() {
+        it('After opening demoqa.com you get the correct title', async function() {
             await driver.get('https://demoqa.com/');
 
             // // Enter keywords and click enter
@@ -25,6 +25,34 @@ describe('Testing demoqa.com', function() {
             
             let title = await driver.getTitle();
             assert.equal(title, 'ToolsQA – Demo Website to Practice Automation – Demo Website to Practice Automation');
+        });
+
+        it('Internal link on top menu links to the correct site', async function() {
+            await driver.get('https://demoqa.com/');
+            await driver.findElement(By.xpath('//ul[@id="menu-top"]/li[2]/a')).click();
+            let currentUrl = await driver.getCurrentUrl();
+            assert.equal(currentUrl, 'https://demoqa.com/category/interactions/');
+        });
+
+        it('Internal link on sidebar in Interactions section links to the correct site', async function() {
+            await driver.get('https://demoqa.com/');
+            await driver.findElement(By.xpath('//div[@id="sidebar"]/aside/ul/li[3]/a')).click();
+            let currentUrl = await driver.getCurrentUrl();
+            assert.equal(currentUrl, 'https://demoqa.com/resizable/');
+        });
+
+        it('Internal link on sidebar in Widgets section links to the correct site', async function() {
+            await driver.get('https://demoqa.com/');
+            await driver.findElement(By.xpath('//div[@id="sidebar"]/aside[2]/ul/li[6]/a')).click();
+            let currentUrl = await driver.getCurrentUrl();
+            assert.equal(currentUrl, 'https://demoqa.com/tooltip/');
+        });
+
+        it('The external link on the header links to toolsqa.com', async function() {
+            await driver.get('https://demoqa.com/');
+            await driver.findElement(By.xpath('//div[@id="logo-events"]/a')).click();
+            let currentUrl = await driver.getCurrentUrl();
+            assert.equal(currentUrl, 'https://www.toolsqa.com/');
         });
     });
 
@@ -67,7 +95,7 @@ describe('Testing demoqa.com', function() {
         it('After right-click on right-click button you should see a select menu', async function() {
             await driver.get('https://demoqa.com/tooltip-and-double-click/');
             await driver.findElement(By.id('rightClickBtn')).click(Button.RIGHT);
-            await driver.findElement(By.xpath("//div[@id='rightclickItem']/div[2]")).click();
+            await driver.findElement(By.xpath("//div[@id='rightclickItem']/div[2]")).sendKeys();
             //add an assert
             await driver.switchTo().alert().accept();
         });
