@@ -17,12 +17,6 @@ describe('Testing demoqa.com', function() {
 
         it('After opening demoqa.com you get the correct title', async function() {
             await driver.get('https://demoqa.com/');
-
-            // // Enter keywords and click enter
-            // await driver.findElement(By.id('lst-ib')).sendKeys('dalenguyen', Key.RETURN);
-            // // Wait for the results box by id
-            // await driver.wait(until.elementLocated(By.id('rcnt')), 10000);
-            
             let title = await driver.getTitle();
             assert.equal(title, 'ToolsQA – Demo Website to Practice Automation – Demo Website to Practice Automation');
         });
@@ -242,6 +236,54 @@ describe('Testing demoqa.com', function() {
             let selectedItem7 = await driver.findElement(By.xpath("//ol[@id='selectable']/li[7]")).getAttribute('class');
             let selected = 'ui-widget-content ui-selectee ui-selected';
             assert.equal(selectedItem7, selected);
+        });
+    });
+
+
+    describe('Test the Dialog', function(){
+        it(' After closing the dialog window with `x` icon, the window is not visible any more', async function() {
+            await driver.get('https://demoqa.com/dialog/');
+            await driver.findElement(By.xpath("//div[@class='ui-dialog-titlebar ui-corner-all ui-widget-header ui-helper-clearfix ui-draggable-handle']/button")).click();
+            //add an assert
+        });
+    });
+
+    describe('Test the Datepicker', function(){
+        it('After writing a date in format 12/21/2019 you should see a calendar with highlighted date 21/12/2019', async function() {
+            await driver.get('https://demoqa.com/datepicker/');
+            await driver.findElement(By.id('datepicker')).sendKeys('12/21/2019', Key.RETURN);
+            //add an assert
+        });
+
+        it('After writing a date in format 01/14/0030 you should see a calendar with highlighted date 21/12/2030', async function() {
+            await driver.get('https://demoqa.com/datepicker/');
+            await driver.findElement(By.id('datepicker')).sendKeys('01/04/0030', Key.RETURN);
+            //add an assert
+        });
+
+        it('After writing a date in format 01/14/0031 you should see a calendar with highlighted date 21/12/1931', async function() {
+            await driver.get('https://demoqa.com/datepicker/');
+            await driver.findElement(By.id('datepicker')).sendKeys('01/04/0031', Key.RETURN);
+            //add an assert
+        });
+
+        it('After writing a date in format 02/29/2019 you should see a calendar with highlighted today’s date', async function() {
+            await driver.get('https://demoqa.com/datepicker/');
+            await driver.findElement(By.id('datepicker')).sendKeys('02/29/2019', Key.RETURN);
+            //add an assert
+        });
+
+        it('After writing a date in format 21.12.2019 you should see a calendar with highlighted today’s date', async function() {
+            await driver.get('https://demoqa.com/datepicker/');
+            await driver.findElement(By.id('datepicker')).sendKeys('21.12.2019', Key.RETURN);
+            //add an assert
+        });
+    });
+
+    describe('Test the Keyboard Events', function(){
+        it('After choosing a file and clicking `Click to Upload` button you should see a window with file path: "C:/fakepath/file-upload.png"', async function() {
+            await driver.get('https://demoqa.com/keyboard-events/');
+            await driver.findElement(By.id('browseFile')).sendKeys('file-upload.png');
         });
     });
 
