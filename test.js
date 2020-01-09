@@ -82,22 +82,25 @@ describe('Testing demoqa.com', function() {
             await driver.get('https://demoqa.com/tooltip-and-double-click/');
             let doubleClickButton = await driver.findElement(By.id('doubleClickBtn'));
             await actions.doubleClick(doubleClickButton).perform();
-            //add an assert
+            let alertText = await driver.switchTo().alert().getText();
+            assert.equal(alertText, 'Double Click Alert\n' + '\n' + 'Hi,You are seeing this message as you have double cliked on the button');
             await driver.switchTo().alert().accept();
         });
 
         it('After right-click on right-click button you should see a select menu', async function() {
             await driver.get('https://demoqa.com/tooltip-and-double-click/');
             await driver.findElement(By.id('rightClickBtn')).click(Button.RIGHT);
-            await driver.findElement(By.xpath("//div[@id='rightclickItem']/div[2]")).sendKeys();
-            //add an assert
+            await driver.findElement(By.xpath("//div[@id='rightclickItem']/div[2]")).sendKeys(); //Error: element not interactable - WHY?
+            let alertText = await driver.switchTo().alert().getText();
+            assert.equal(alertText, 'You have selected Copy');
             await driver.switchTo().alert().accept();
         });
 
         it('After hover over hover element you should see a tooltip', async function() {
             await driver.get('https://demoqa.com/tooltip-and-double-click/');
             await actions.move(driver.findElement(By.id('tooltipDemo'))).perform();
-            //add an assert
+            let tooltipText = await driver.findElement(By.className('tooltiptext')).getText();
+            assert.equal(tooltipText, 'We ask for your age only for statistical purposes.'); //Assertion Error - WHY?
         });
     });
 
@@ -249,41 +252,73 @@ describe('Testing demoqa.com', function() {
     });
 
     describe('Test the Datepicker', function(){
+        it('After clicking on input field, you should see a calendar with highlighted today’s date', async function() {
+            await driver.get('https://demoqa.com/datepicker/');
+            await driver.findElement(By.id('datepicker')).click();
+            let todaysDate = await driver.findElement(By.xpath('//td[@class=" ui-datepicker-days-cell-over  ui-datepicker-today"]/a')).getAttribute('class');
+            assert.equal(todaysDate, 'ui-state-default ui-state-highlight ui-state-hover');
+        });
+
+        it('After choosing the today’s date in calendar, you should see a today’s date in input field in format mm/dd/yyyy', async function() {
+            await driver.get('https://demoqa.com/datepicker/');
+            await driver.findElement(By.id('datepicker')).click();
+            await driver.findElement(By.xpath('//td[@class=" ui-datepicker-days-cell-over  ui-datepicker-today"]/a')).click();
+            let todaysDate = await driver.findElement(By.xpath('//td[@class=" ui-datepicker-days-cell-over  ui-datepicker-today"]/a')).getAttribute('class');
+            assert.equal(todaysDate, 'ui-state-default ui-state-highlight ui-state-hover');
+            //add an assert which checks date format
+        });
+
         it('After writing a date in format 12/21/2019 you should see a calendar with highlighted date 21/12/2019', async function() {
             await driver.get('https://demoqa.com/datepicker/');
             await driver.findElement(By.id('datepicker')).sendKeys('12/21/2019', Key.RETURN);
-            //add an assert
+            let pickedMonth = await driver.findElement(By.xpath('//div[@class="ui-datepicker-title"]/span[1]')).getText();
+            assert.equal(pickedMonth, 'December');
+            let pickedYear = await driver.findElement(By.xpath('//div[@class="ui-datepicker-title"]/span[2]')).getText();
+            assert.equal(pickedYear, '2019');
+            let pickedDay = await driver.findElement(By.xpath('//table[@class="ui-datepicker-calendar"]/tbody/tr[3]/td[7]/a')).getText();
+            assert.equal(pickedDay, '21');
+            let isHighlighted = await driver.findElement(By.xpath('//table[@class="ui-datepicker-calendar"]/tbody/tr[3]/td[7]/a')).getAttribute('class');
+            assert.equal(isHighlighted, 'ui-state-default ui-state-active ui-state-hover');
         });
 
         it('After writing a date in format 01/14/0030 you should see a calendar with highlighted date 21/12/2030', async function() {
             await driver.get('https://demoqa.com/datepicker/');
             await driver.findElement(By.id('datepicker')).sendKeys('01/04/0030', Key.RETURN);
-            //add an assert
+            let pickedYear = await driver.findElement(By.xpath('//div[@class="ui-datepicker-title"]/span[2]')).getText();
+            assert.equal(pickedYear, '2030');
         });
 
         it('After writing a date in format 01/14/0031 you should see a calendar with highlighted date 21/12/1931', async function() {
             await driver.get('https://demoqa.com/datepicker/');
             await driver.findElement(By.id('datepicker')).sendKeys('01/04/0031', Key.RETURN);
-            //add an assert
+            let pickedYear = await driver.findElement(By.xpath('//div[@class="ui-datepicker-title"]/span[2]')).getText();
+            assert.equal(pickedYear, '1931');
         });
 
         it('After writing a date in format 02/29/2019 you should see a calendar with highlighted today’s date', async function() {
             await driver.get('https://demoqa.com/datepicker/');
             await driver.findElement(By.id('datepicker')).sendKeys('02/29/2019', Key.RETURN);
-            //add an assert
+            //assert doesn't work - why?
+            // let todaysDate = await driver.findElement(By.xpath('//td[@class=" ui-datepicker-days-cell-over  ui-datepicker-today"]/a')).getAttribute('class');
+            // assert.equal(todaysDate, 'ui-state-default ui-state-highlight ui-state-hover');
         });
 
         it('After writing a date in format 21.12.2019 you should see a calendar with highlighted today’s date', async function() {
             await driver.get('https://demoqa.com/datepicker/');
             await driver.findElement(By.id('datepicker')).sendKeys('21.12.2019', Key.RETURN);
-            //add an assert
+            //assert doesn't work - why?
+            // let todaysDate = await driver.findElement(By.xpath('//td[@class=" ui-datepicker-days-cell-over  ui-datepicker-today"]/a')).getAttribute('class');
+            // assert.equal(todaysDate, 'ui-state-default ui-state-highlight ui-state-hover');
         });
     });
 
     describe('Test the Keyboard Events', function(){
-        it('After choosing a file and clicking `Click to Upload` button you should see a window with file path: "C:/fakepath/file-upload.png"', async function() {
+        it('After choosing a file and clicking `Click to Upload` button you should see a window with file path: "C:\fakepath\file-upload.png"', async function() {
             await driver.get('https://demoqa.com/keyboard-events/');
-            await driver.findElement(By.id('browseFile')).sendKeys('file-upload.png');
+            await driver.findElement(By.id('browseFile')).sendKeys('file-upload.png'); // Error - file not found - WHY?
+            await driver.findElement(By.id('uploadButton')).click();
+            let alertText = await driver.switchTo().alert().getText();
+            assert.equal(alertText, 'Thanks, you have selected C:\fakepath\file-upload.png file to Upload');
         });
     });
 
