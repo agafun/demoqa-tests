@@ -138,22 +138,35 @@ describe('Testing demoqa.com', function() {
 
         });
 
-        // it('After dragging the element not to the target the element is placed on release point and the target square is colored gray with inscription `Drop here`', async function() {
-        //     await driver.get('https://demoqa.com/droppable/');
-        //     let webElementFrom = await driver.findElement(By.id('draggable'));
-        //     let webElementTo = await driver.findElement(By.xpath('//div[@id="content"]/h1'));
-        //     await actions.dragAndDrop(webElementFrom, webElementTo).perform();
-        // });
+        it('After dragging the element not to the target the element is placed on release point and the target square is colored gray with inscription `Drop here`', async function() {
+            await driver.get('https://demoqa.com/droppable/');
+            let webElementFrom = await driver.findElement(By.id('draggable'));
+            await actions.dragAndDrop(webElementFrom, {x:300, y:250}).perform();
+            let notDropped = await driver.findElement(By.xpath('//div[@id="droppable"]/p')).getText();
+            assert.equal(notDropped, 'Drop here');
+            let notHighlighted = await driver.findElement(By.xpath('//div[@id="droppable"]')).getAttribute('class');
+            assert.equal(notHighlighted, 'ui-widget-header ui-droppable');
+        });
 
-        // it('After dragging the element not whole to the target the element is placed on release point and the target square is colored gray with inscription `Drop here`', async function() {
-        //     await driver.get('https://demoqa.com/droppable/');
-        //     let webElementFrom = await driver.findElement(By.id('draggable'));
-        // });
+        it('After dragging the element not whole to the target the element is placed on release point and the target square is colored gray with inscription `Drop here`', async function() {
+            await driver.get('https://demoqa.com/droppable/');
+            let webElementFrom = await driver.findElement(By.id('draggable'));
+            await actions.dragAndDrop(webElementFrom, {x:70, y:29}).perform();
+            let notDropped = await driver.findElement(By.xpath('//div[@id="droppable"]/p')).getText();
+            assert.equal(notDropped, 'Drop here');
+            let notHighlighted = await driver.findElement(By.xpath('//div[@id="droppable"]')).getAttribute('class');
+            assert.equal(notHighlighted, 'ui-widget-header ui-droppable');
+        });
 
-        // it('After dragging the element outside the element is nov visible and the target square is colored gray with inscription `Drop here`', async function() {
-        //     await driver.get('https://demoqa.com/droppable/');
-        //     let webElementFrom = await driver.findElement(By.id('draggable'));
-        // });
+        it('After dragging the element outside the element is not visible and the target square is colored gray with inscription `Drop here`', async function() {
+            await driver.get('https://demoqa.com/droppable/');
+            let webElementFrom = await driver.findElement(By.id('draggable'));
+            await actions.dragAndDrop(webElementFrom, {x:-300, y:250}).perform();
+            let notDropped = await driver.findElement(By.xpath('//div[@id="droppable"]/p')).getText();
+            assert.equal(notDropped, 'Drop here');
+            let notHighlighted = await driver.findElement(By.xpath('//div[@id="droppable"]')).getAttribute('class');
+            assert.equal(notHighlighted, 'ui-widget-header ui-droppable');
+        });
     });
 
     describe('Test the Checkboxradio', function(){
@@ -272,10 +285,10 @@ describe('Testing demoqa.com', function() {
 
         it('After selecting Item 4 to 7 with shift/ctrl+shift button, Item 4, 5, 6 and 7 are highlighted in orange', async function() {
             await driver.get('https://demoqa.com/selectable/');
-            await actions.keyDown(Key.SHIFT).perform();
+            await actions.keyDown(Key.CONTROL, Key.SHIFT).perform();
             await driver.findElement(By.xpath("//ol[@id='selectable']/li[4]")).click();
             await driver.findElement(By.xpath("//ol[@id='selectable']/li[7]")).click();
-            await actions.keyUp(Key.SHIFT).perform();
+            await actions.keyUp(Key.CONTROL, Key.SHIFT).perform();
             let selectedItem4 = await driver.findElement(By.xpath("//ol[@id='selectable']/li[4]")).getAttribute('class');
             let selectedItem5 = await driver.findElement(By.xpath("//ol[@id='selectable']/li[5]")).getAttribute('class');
             let selectedItem6 = await driver.findElement(By.xpath("//ol[@id='selectable']/li[6]")).getAttribute('class');
