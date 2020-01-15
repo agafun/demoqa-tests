@@ -350,6 +350,39 @@ describe('Testing demoqa.com', function() {
 
 
     describe('Test the Dialog', function(){
+        it('Dialog window moves to the release point', async function() {
+            await driver.get('https://demoqa.com/dialog/');
+            let moveFrom = await driver.findElement(By.id('ui-id-1'));
+            await actions.dragAndDrop(moveFrom, {x:-587, y:-296}).perform();
+            //add an assert
+        });
+
+        it('Size of dialog window is changed horizontally and vertically in all four directions', async function() {
+            await driver.get('https://demoqa.com/dialog/');
+            let resizeRight = await driver.findElement(By.className('ui-resizable-handle ui-resizable-e'));
+            let resizeLeft = await driver.findElement(By.className('ui-resizable-handle ui-resizable-w'));
+            let resizeUp = await driver.findElement(By.className('ui-resizable-handle ui-resizable-n'));
+            let resizeDown = await driver.findElement(By.className('ui-resizable-handle ui-resizable-s'));
+            await actions.dragAndDrop(resizeRight, {x:400, y:0}).perform();
+            await actions.dragAndDrop(resizeLeft, {x:-300, y:0}).perform();
+            await actions.dragAndDrop(resizeUp, {x:0, y:-200}).perform();
+            await actions.dragAndDrop(resizeDown, {x:0, y:200}).perform();
+            //add an assert
+        });
+
+        it('Size of dialog window is changed diagonally in all four directions', async function() {
+            await driver.get('https://demoqa.com/dialog/');
+            let resizeRightDown = await driver.findElement(By.className('ui-resizable-handle ui-resizable-se'));
+            let resizeRightUp = await driver.findElement(By.className('ui-resizable-handle ui-resizable-ne'));
+            let resizeLeftDown = await driver.findElement(By.className('ui-resizable-handle ui-resizable-nw'));
+            let resizeLeftUp = await driver.findElement(By.className('ui-resizable-handle ui-resizable-sw'));
+            await actions.dragAndDrop(resizeRightDown, {x:400, y:100}).perform();
+            await actions.dragAndDrop(resizeRightUp, {x:400, y:-100}).perform();
+            await actions.dragAndDrop(resizeLeftDown, {x:-100, y:200}).perform();
+            await actions.dragAndDrop(resizeLeftUp, {x:-100, y:-200}).perform();
+            //add an assert
+        });
+        
         it(' After closing the dialog window with `x` icon, the window is not visible any more', async function() {
             await driver.get('https://demoqa.com/dialog/');
             await driver.findElement(By.xpath("//div[@class='ui-dialog-titlebar ui-corner-all ui-widget-header ui-helper-clearfix ui-draggable-handle']/button")).click();
@@ -444,6 +477,44 @@ describe('Testing demoqa.com', function() {
         // it('', async function() {
 
         // });
+    });
+
+    describe('Test the Resizable', function(){
+        it('The maximum horizontal size ends on right window edge', async function() {
+            await driver.get('https://demoqa.com/resizable/');
+            let webElementFrom = await driver.findElement(By.xpath('//div[@id="resizable"]/div[3]'));
+            await actions.dragAndDrop(webElementFrom, {x:626, y:0}).perform();
+        });
+
+        it('The minimum horizontal size ends on left element’s edge + 10px', async function() {
+            await driver.get('https://demoqa.com/resizable/');
+            let webElementFrom = await driver.findElement(By.xpath('//div[@id="resizable"]/div[3]'));
+            await actions.dragAndDrop(webElementFrom, {x:-125, y:0}).perform();
+        });
+
+        it('The maximum vertical size ends on bottom window edge', async function() {
+            await driver.get('https://demoqa.com/resizable/');
+            let webElementFrom = await driver.findElement(By.xpath('//div[@id="resizable"]/div[3]'));
+            await actions.dragAndDrop(webElementFrom, {x:0, y:251}).perform();
+        });
+
+        it('The minimum vertical size ends on up element’s edge + 10px', async function() {
+            await driver.get('https://demoqa.com/resizable/');
+            let webElementFrom = await driver.findElement(By.xpath('//div[@id="resizable"]/div[3]'));
+            await actions.dragAndDrop(webElementFrom, {x:0, y:-125}).perform();
+        });
+
+        it('The maximum diagonal size ends on right/bottom window angle', async function() {
+            await driver.get('https://demoqa.com/resizable/');
+            let webElementFrom = await driver.findElement(By.xpath('//div[@id="resizable"]/div[3]'));
+            await actions.dragAndDrop(webElementFrom, {x:626, y:251}).perform();
+        });
+
+        it('The minumum diagonal size ends on left/up element’s angle + 10px', async function() {
+            await driver.get('https://demoqa.com/resizable/');
+            let webElementFrom = await driver.findElement(By.xpath('//div[@id="resizable"]/div[3]'));
+            await actions.dragAndDrop(webElementFrom, {x:-125, y:-125}).perform();
+        });
     });
 
     // describe('', function(){
