@@ -449,12 +449,12 @@ describe('Testing demoqa.com', function() {
     });
 
     describe('Test the Keyboard Events', function(){
-        it('After choosing a file and clicking `Click to Upload` button you should see a window with file path: "C:\fakepath\file-upload.png"', async function() {
+        it('After choosing a file and clicking `Click to Upload` button you should see a window with file path: "C:\\fakepath\\file-upload.png"', async function() {
             await driver.get('https://demoqa.com/keyboard-events/');
-            await driver.findElement(By.id('browseFile')).sendKeys('file-upload.png'); // Error - file not found - WHY?
+            await driver.findElement(By.id('browseFile')).sendKeys('/Users/aga/Desktop/file-upload.png');
             await driver.findElement(By.id('uploadButton')).click();
             let alertText = await driver.switchTo().alert().getText();
-            assert.equal(alertText, 'Thanks, you have selected C:\fakepath\file-upload.png file to Upload');
+            assert.equal(alertText, 'Thanks, you have selected C:\\fakepath\\file-upload.png file to Upload');
         });
     });
 
