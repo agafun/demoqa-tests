@@ -108,20 +108,17 @@ describe('Testing demoqa.com', function() {
         it('Slider moves by dragging a mouse to the release point', async function() {
             await driver.get('https://demoqa.com/slider/');
             let slideFrom = await driver.findElement(By.className('ui-slider-handle ui-corner-all ui-state-default'));
-            let slideTo = await driver.findElement(By.className('ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content'));
-            await actions.dragAndDrop(slideFrom, slideTo).perform();
-            //add some different release point/webElementTo
-            //add an assert
-            assert(true);
+            await actions.dragAndDrop(slideFrom, {x:250, y:0}).perform();
+            let slidePercent = await driver.findElement(By.xpath('//div[@id="slider"]/span')).getAttribute('style');
+            assert.equal(slidePercent, 'left: 64%;')
         });
 
         it('Slider moves by clicking a bar to the click point', async function() {
             await driver.get('https://demoqa.com/slider/');
             await driver.findElement(By.className('ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content')).click();
-            //add some different click point
-            //add an assert
-            
-            assert(true);
+            let slidePercent = await driver.findElement(By.xpath('//div[@id="slider"]/span')).getAttribute('style');
+            assert.equal(slidePercent, 'left: 50%;')
+            //possible improvement: add different click point
         });
     });
 
