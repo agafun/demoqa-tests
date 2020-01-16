@@ -9,7 +9,7 @@ describe('Testing demoqa.com', function() {
     });
 
     let actions;
-    before(async function() {
+    beforeEach(async function() {
         actions = await driver.actions();
     });
     
@@ -360,10 +360,10 @@ describe('Testing demoqa.com', function() {
             let resizeLeft = await driver.findElement(By.className('ui-resizable-handle ui-resizable-w'));
             let resizeUp = await driver.findElement(By.className('ui-resizable-handle ui-resizable-n'));
             let resizeDown = await driver.findElement(By.className('ui-resizable-handle ui-resizable-s'));
-            await actions.dragAndDrop(resizeRight, {x:400, y:0}).perform();
-            await actions.dragAndDrop(resizeLeft, {x:-300, y:0}).perform();
-            await actions.dragAndDrop(resizeUp, {x:0, y:-200}).perform();
-            await actions.dragAndDrop(resizeDown, {x:0, y:200}).perform();
+            await actions.dragAndDrop(resizeRight, {x:400, y:0})
+            .dragAndDrop(resizeLeft, {x:-300, y:0})
+            .dragAndDrop(resizeUp, {x:0, y:-200})
+            .dragAndDrop(resizeDown, {x:0, y:200}).perform();
             //add an assert
         });
 
@@ -373,10 +373,10 @@ describe('Testing demoqa.com', function() {
             let resizeRightUp = await driver.findElement(By.className('ui-resizable-handle ui-resizable-ne'));
             let resizeLeftDown = await driver.findElement(By.className('ui-resizable-handle ui-resizable-nw'));
             let resizeLeftUp = await driver.findElement(By.className('ui-resizable-handle ui-resizable-sw'));
-            await actions.dragAndDrop(resizeRightDown, {x:400, y:100}).perform();
-            await actions.dragAndDrop(resizeRightUp, {x:400, y:-100}).perform();
-            await actions.dragAndDrop(resizeLeftDown, {x:-100, y:200}).perform();
-            await actions.dragAndDrop(resizeLeftUp, {x:-100, y:-200}).perform();
+            await actions.dragAndDrop(resizeRightDown, {x:50, y:50})
+            .dragAndDrop(resizeRightUp, {x:100, y:-100})
+            .dragAndDrop(resizeLeftDown, {x:-100, y:50})
+            .dragAndDrop(resizeLeftUp, {x:-100, y:-100}).perform();
             //add an assert
         });
         
