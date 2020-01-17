@@ -50,167 +50,6 @@ describe('Testing demoqa.com', function() {
         });
     });
 
-
-    describe('Test the HTML contact form', function() {
-        it('After clicking Submit button you should be redirected to a search website and the url address should contain value of Country and Subject as parameters', async function() {
-            await driver.get('https://demoqa.com/html-contact-form/');
-            await driver.findElement(By.className('firstname')).sendKeys('Ala');
-            await driver.findElement(By.id('lname')).sendKeys('Makota');
-            await driver.findElement(By.name('country')).sendKeys('Poland');
-            await driver.findElement(By.id('subject')).sendKeys('Hello');
-            await driver.findElement(By.xpath(".//div[@id='content']/div[@class='demo-frame']/div[@class='container']/form/input[@type='submit']")).click();
-            let currentUrl = await driver.getCurrentUrl();
-            assert.equal(currentUrl, 'https://demoqa.com/html-contact-form/onsubmitform?country=Poland&subject=Hello');
-            //add improvement: assert which takes not the whole url, but only country & subject
-        });
-
-        it('After clicking Submit button you should be redirected to a search website and the url address should contain value of Country and Subject as parameters despite special characters', async function() {
-            await driver.get('https://demoqa.com/html-contact-form/');
-            await driver.findElement(By.className('firstname')).sendKeys('Ala');
-            await driver.findElement(By.id('lname')).sendKeys('Makota');
-            await driver.findElement(By.name('country')).sendKeys('P0l4nd');
-            await driver.findElement(By.id('subject')).sendKeys('%&*');
-            await driver.findElement(By.xpath(".//div[@id='content']/div[@class='demo-frame']/div[@class='container']/form/input[@type='submit']")).click();
-            let currentUrl = await driver.getCurrentUrl();
-            assert.equal(currentUrl, 'https://demoqa.com/html-contact-form/onsubmitform?country=P0l4nd&subject=%25%26*');
-            //add improvement: assert which takes not the whole url, but only country & subject
-        });
-    });
-
-    describe('Test the Tooltip and Double click', function() {
-        it('After double click on double click button you should see an alert window', async function() {
-            await driver.get('https://demoqa.com/tooltip-and-double-click/');
-            let doubleClickButton = await driver.findElement(By.id('doubleClickBtn'));
-            await actions.doubleClick(doubleClickButton).perform();
-            let alertText = await driver.switchTo().alert().getText();
-            assert.equal(alertText, 'Double Click Alert\n' + '\n' + 'Hi,You are seeing this message as you have double cliked on the button');
-            await driver.switchTo().alert().accept();
-        });
-
-        it('After right-click on right-click button you should see a select menu', async function() {
-            await driver.get('https://demoqa.com/tooltip-and-double-click/');
-            await driver.findElement(By.id('rightClickBtn')).click(Button.RIGHT);
-            await driver.findElement(By.xpath("//div[@id='rightclickItem']/div[2]")).sendKeys(); //Error: element not interactable - WHY?
-            let alertText = await driver.switchTo().alert().getText();
-            assert.equal(alertText, 'You have selected Copy');
-            await driver.switchTo().alert().accept();
-        });
-
-        it('After hover over hover element you should see a tooltip', async function() {
-            await driver.get('https://demoqa.com/tooltip-and-double-click/');
-            await actions.move(driver.findElement(By.id('tooltipDemo'))).perform();
-            let tooltipText = await driver.findElement(By.className('tooltiptext')).getText();
-            assert.equal(tooltipText, 'We ask for your age only for statistical purposes.'); //Assertion Error - WHY?
-        });
-    });
-
-    describe('Test the Slider', function(){
-        it('Slider moves by dragging a mouse to the release point', async function() {
-            await driver.get('https://demoqa.com/slider/');
-            let slideFrom = await driver.findElement(By.className('ui-slider-handle ui-corner-all ui-state-default'));
-            await actions.dragAndDrop(slideFrom, {x:250, y:0}).perform();
-            let slidePercent = await driver.findElement(By.xpath('//div[@id="slider"]/span')).getAttribute('style');
-            assert.equal(slidePercent, 'left: 64%;')
-        });
-
-        it('Slider moves by clicking a bar to the click point', async function() {
-            await driver.get('https://demoqa.com/slider/');
-            await driver.findElement(By.className('ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content')).click();
-            let slidePercent = await driver.findElement(By.xpath('//div[@id="slider"]/span')).getAttribute('style');
-            assert.equal(slidePercent, 'left: 50%;')
-            //possible improvement: add different click point
-        });
-    });
-
-    describe('Test the Droppable', function(){
-        it('After dragging the element to the target the element is within the target square and the target square is colored yellow with inscription `Dropped!`', async function() {
-            await driver.get('https://demoqa.com/droppable/');
-            let dropFrom = await driver.findElement(By.id('draggable'));
-            let dropTo = await driver.findElement(By.id('droppable'));
-            await actions.dragAndDrop(dropFrom, dropTo).perform();
-            let dropped = await driver.findElement(By.xpath('//div[@id="droppable"]/p')).getText();
-            assert.equal(dropped, 'Dropped!');
-            let highlighted = await driver.findElement(By.xpath('//div[@id="droppable"]')).getAttribute('class');
-            assert.equal(highlighted, 'ui-widget-header ui-droppable ui-state-highlight');
-
-        });
-
-        it('After dragging the element not to the target the element is placed on release point and the target square is colored gray with inscription `Drop here`', async function() {
-            await driver.get('https://demoqa.com/droppable/');
-            let webElementFrom = await driver.findElement(By.id('draggable'));
-            await actions.dragAndDrop(webElementFrom, {x:300, y:250}).perform();
-            let notDropped = await driver.findElement(By.xpath('//div[@id="droppable"]/p')).getText();
-            assert.equal(notDropped, 'Drop here');
-            let notHighlighted = await driver.findElement(By.xpath('//div[@id="droppable"]')).getAttribute('class');
-            assert.equal(notHighlighted, 'ui-widget-header ui-droppable');
-        });
-
-        it('After dragging the element not whole to the target the element is placed on release point and the target square is colored gray with inscription `Drop here`', async function() {
-            await driver.get('https://demoqa.com/droppable/');
-            let webElementFrom = await driver.findElement(By.id('draggable'));
-            await actions.dragAndDrop(webElementFrom, {x:70, y:29}).perform();
-            let notDropped = await driver.findElement(By.xpath('//div[@id="droppable"]/p')).getText();
-            assert.equal(notDropped, 'Drop here');
-            let notHighlighted = await driver.findElement(By.xpath('//div[@id="droppable"]')).getAttribute('class');
-            assert.equal(notHighlighted, 'ui-widget-header ui-droppable');
-        });
-
-        it('After dragging the element outside the element is not visible and the target square is colored gray with inscription `Drop here`', async function() {
-            await driver.get('https://demoqa.com/droppable/');
-            let webElementFrom = await driver.findElement(By.id('draggable'));
-            await actions.dragAndDrop(webElementFrom, {x:-300, y:250}).perform();
-            let notDropped = await driver.findElement(By.xpath('//div[@id="droppable"]/p')).getText();
-            assert.equal(notDropped, 'Drop here');
-            let notHighlighted = await driver.findElement(By.xpath('//div[@id="droppable"]')).getAttribute('class');
-            assert.equal(notHighlighted, 'ui-widget-header ui-droppable');
-        });
-    });
-
-    describe('Test the Checkboxradio', function(){
-        it('After selecting New York, Paris and London in Radio Group only London is selected', async function() {
-            await driver.get('https://demoqa.com/checkboxradio/');
-            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset/label[1]")).click();
-            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset/label[2]")).click();
-            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset/label[3]")).click();
-            let londonClassActive = await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset/label[3]")).getAttribute('class');
-            let radioCheckboxClassActive = 'ui-checkboxradio-label ui-corner-all ui-button ui-widget ui-checkboxradio-radio-label ui-state-focus ui-visual-focus ui-checkboxradio-checked ui-state-active';
-            assert.equal(londonClassActive, radioCheckboxClassActive);
-        });
-
-        it('After checking 2 Star, 3 Star, 4 Star and 5 Star and unchecking 4 Star in Checkbox only 2 Star, 3 Star and 5 Star are checked', async function() {
-            await driver.get('https://demoqa.com/checkboxradio/');
-            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[2]/label[1]")).click();
-            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[2]/label[2]")).click();
-            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[2]/label[3]")).click();
-            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[2]/label[4]")).click();
-            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[2]/label[3]")).click();
-            let star2ClassActive = await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[2]/label[1]")).getAttribute('class');
-            let star3ClassActive = await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[2]/label[2]")).getAttribute('class');
-            let star5ClassActive = await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[2]/label[4]")).getAttribute('class');
-            let checkboxClassActive = 'ui-checkboxradio-label ui-corner-all ui-button ui-widget ui-checkboxradio-checked ui-state-active';
-            assert.equal(star2ClassActive, checkboxClassActive);
-            assert.equal(star3ClassActive, checkboxClassActive);
-            assert.equal(star5ClassActive, checkboxClassActive);
-        });
-
-        it('After checking 2 Double, 2 Queen, 1 Queen, 1 King and unchecking 2 Double in Checkbox only 2 Queen, 1 Queen and 1 King are checked', async function() {
-            await driver.get('https://demoqa.com/checkboxradio/');
-            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[3]/label[1]")).click();
-            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[3]/label[2]")).click();
-            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[3]/label[3]")).click();
-            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[3]/label[4]")).click();
-            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[3]/label[1]")).click();
-            let queen2ClassActive = await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[3]/label[2]")).getAttribute('class');
-            let queen1ClassActive = await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[3]/label[3]")).getAttribute('class');
-            let king1ClassActive = await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[3]/label[4]")).getAttribute('class');
-            let nestedCheckboxClassActive = 'ui-checkboxradio-label ui-corner-all ui-button ui-widget ui-checkboxradio-checked ui-state-active';
-            assert.equal(queen2ClassActive, nestedCheckboxClassActive);
-            assert.equal(queen1ClassActive, nestedCheckboxClassActive);
-            assert.equal(king1ClassActive, nestedCheckboxClassActive);
-        });
-    });
-    
-
     describe('Test the Selectable', function(){
         it('After selecting Item 1, Item 1 is highlighted in orange', async function() {
             await driver.get('https://demoqa.com/selectable/');
@@ -295,6 +134,7 @@ describe('Testing demoqa.com', function() {
             assert.equal(selectedItem5, selected);
             assert.equal(selectedItem6, selected);
             assert.equal(selectedItem7, selected);
+            //shift button doesn't work
         }); 
 
         it('After selecting Item 4 to 7 by dragging a mouse, Item 4, 5, 6 and 7 are highlighted in orange', async function() {
@@ -320,7 +160,7 @@ describe('Testing demoqa.com', function() {
             await actions.dragAndDrop(selectFrom, selectTo).perform();
             await actions.keyDown(Key.COMMAND).perform();
             await driver.findElement(By.xpath("//ol[@id='selectable']/li[5]")).click();
-            await actions.keyUp(Key.SHIFT).perform();
+            await actions.keyUp(Key.COMMAND).perform();
             let selectedItem4 = await driver.findElement(By.xpath("//ol[@id='selectable']/li[4]")).getAttribute('class');
             let selectedItem5 = await driver.findElement(By.xpath("//ol[@id='selectable']/li[5]")).getAttribute('class');
             let selectedItem6 = await driver.findElement(By.xpath("//ol[@id='selectable']/li[6]")).getAttribute('class');
@@ -331,6 +171,7 @@ describe('Testing demoqa.com', function() {
             assert.equal(selectedItem5, unselected);
             assert.equal(selectedItem6, selected);
             assert.equal(selectedItem7, selected);
+            //assertion error
         }); 
 
         it('After selecting Item 4 to 7 by dragging a mouse and selecting Item 7 once again, only Item 7 is highlighted in orange', async function() {
@@ -342,9 +183,193 @@ describe('Testing demoqa.com', function() {
             let selectedItem7 = await driver.findElement(By.xpath("//ol[@id='selectable']/li[7]")).getAttribute('class');
             let selected = 'ui-widget-content ui-selectee ui-selected';
             assert.equal(selectedItem7, selected);
+            //assertion error
         });
     });
 
+    describe('Test the Resizable', function(){
+        it('The maximum horizontal size ends on right window edge', async function() {
+            await driver.get('https://demoqa.com/resizable/');
+            let webElementFrom = await driver.findElement(By.xpath('//div[@id="resizable"]/div[3]'));
+            await actions.dragAndDrop(webElementFrom, {x:626, y:0}).perform();
+        });
+
+        it('The minimum horizontal size ends on left element’s edge + 10px', async function() {
+            await driver.get('https://demoqa.com/resizable/');
+            let webElementFrom = await driver.findElement(By.xpath('//div[@id="resizable"]/div[3]'));
+            await actions.dragAndDrop(webElementFrom, {x:-125, y:0}).perform();
+        });
+
+        it('The maximum vertical size ends on bottom window edge', async function() {
+            await driver.get('https://demoqa.com/resizable/');
+            let webElementFrom = await driver.findElement(By.xpath('//div[@id="resizable"]/div[3]'));
+            await actions.dragAndDrop(webElementFrom, {x:0, y:251}).perform();
+        });
+
+        it('The minimum vertical size ends on up element’s edge + 10px', async function() {
+            await driver.get('https://demoqa.com/resizable/');
+            let webElementFrom = await driver.findElement(By.xpath('//div[@id="resizable"]/div[3]'));
+            await actions.dragAndDrop(webElementFrom, {x:0, y:-125}).perform();
+        });
+
+        it('The maximum diagonal size ends on right/bottom window angle', async function() {
+            await driver.get('https://demoqa.com/resizable/');
+            let webElementFrom = await driver.findElement(By.xpath('//div[@id="resizable"]/div[3]'));
+            await actions.dragAndDrop(webElementFrom, {x:626, y:251}).perform();
+        });
+
+        it('The minumum diagonal size ends on left/up element’s angle + 10px', async function() {
+            await driver.get('https://demoqa.com/resizable/');
+            let webElementFrom = await driver.findElement(By.xpath('//div[@id="resizable"]/div[3]'));
+            await actions.dragAndDrop(webElementFrom, {x:-125, y:-125}).perform();
+        });
+    });
+
+    describe('Test the Droppable', function(){
+        it('After dragging the element to the target the element is within the target square and the target square is colored yellow with inscription `Dropped!`', async function() {
+            await driver.get('https://demoqa.com/droppable/');
+            let dropFrom = await driver.findElement(By.id('draggable'));
+            let dropTo = await driver.findElement(By.id('droppable'));
+            await actions.dragAndDrop(dropFrom, dropTo).perform();
+            let dropped = await driver.findElement(By.xpath('//div[@id="droppable"]/p')).getText();
+            assert.equal(dropped, 'Dropped!');
+            let highlighted = await driver.findElement(By.xpath('//div[@id="droppable"]')).getAttribute('class');
+            assert.equal(highlighted, 'ui-widget-header ui-droppable ui-state-highlight');
+
+        });
+
+        it('After dragging the element not to the target the element is placed on release point and the target square is colored gray with inscription `Drop here`', async function() {
+            await driver.get('https://demoqa.com/droppable/');
+            let webElementFrom = await driver.findElement(By.id('draggable'));
+            await actions.dragAndDrop(webElementFrom, {x:300, y:250}).perform();
+            let notDropped = await driver.findElement(By.xpath('//div[@id="droppable"]/p')).getText();
+            assert.equal(notDropped, 'Drop here');
+            let notHighlighted = await driver.findElement(By.xpath('//div[@id="droppable"]')).getAttribute('class');
+            assert.equal(notHighlighted, 'ui-widget-header ui-droppable');
+        });
+
+        it('After dragging the element not whole to the target the element is placed on release point and the target square is colored gray with inscription `Drop here`', async function() {
+            await driver.get('https://demoqa.com/droppable/');
+            let webElementFrom = await driver.findElement(By.id('draggable'));
+            await actions.dragAndDrop(webElementFrom, {x:70, y:29}).perform();
+            let notDropped = await driver.findElement(By.xpath('//div[@id="droppable"]/p')).getText();
+            assert.equal(notDropped, 'Drop here');
+            let notHighlighted = await driver.findElement(By.xpath('//div[@id="droppable"]')).getAttribute('class');
+            assert.equal(notHighlighted, 'ui-widget-header ui-droppable');
+        });
+
+        it('After dragging the element outside the element is not visible and the target square is colored gray with inscription `Drop here`', async function() {
+            await driver.get('https://demoqa.com/droppable/');
+            let webElementFrom = await driver.findElement(By.id('draggable'));
+            await actions.dragAndDrop(webElementFrom, {x:-300, y:250}).perform();
+            let notDropped = await driver.findElement(By.xpath('//div[@id="droppable"]/p')).getText();
+            assert.equal(notDropped, 'Drop here');
+            let notHighlighted = await driver.findElement(By.xpath('//div[@id="droppable"]')).getAttribute('class');
+            assert.equal(notHighlighted, 'ui-widget-header ui-droppable');
+        });
+    });
+
+    describe('Test the HTML contact form', function() {
+        it('After clicking Submit button you should be redirected to a search website and the url address should contain value of Country and Subject as parameters', async function() {
+            await driver.get('https://demoqa.com/html-contact-form/');
+            await driver.findElement(By.className('firstname')).sendKeys('Ala');
+            await driver.findElement(By.id('lname')).sendKeys('Makota');
+            await driver.findElement(By.name('country')).sendKeys('Poland');
+            await driver.findElement(By.id('subject')).sendKeys('Hello');
+            await driver.findElement(By.xpath(".//div[@id='content']/div[@class='demo-frame']/div[@class='container']/form/input[@type='submit']")).click();
+            let currentUrl = await driver.getCurrentUrl();
+            assert.equal(currentUrl, 'https://demoqa.com/html-contact-form/onsubmitform?country=Poland&subject=Hello');
+            //add improvement: assert which takes not the whole url, but only country & subject
+        });
+
+        it('After clicking Submit button you should be redirected to a search website and the url address should contain value of Country and Subject as parameters despite special characters', async function() {
+            await driver.get('https://demoqa.com/html-contact-form/');
+            await driver.findElement(By.className('firstname')).sendKeys('Ala');
+            await driver.findElement(By.id('lname')).sendKeys('Makota');
+            await driver.findElement(By.name('country')).sendKeys('P0l4nd');
+            await driver.findElement(By.id('subject')).sendKeys('%&*');
+            await driver.findElement(By.xpath(".//div[@id='content']/div[@class='demo-frame']/div[@class='container']/form/input[@type='submit']")).click();
+            let currentUrl = await driver.getCurrentUrl();
+            assert.equal(currentUrl, 'https://demoqa.com/html-contact-form/onsubmitform?country=P0l4nd&subject=%25%26*');
+            //add improvement: assert which takes not the whole url, but only country & subject
+        });
+    });
+
+    describe('Test the Keyboard Events', function(){
+        it('After choosing a file and clicking `Click to Upload` button you should see a window with file path: "C:\\fakepath\\file-upload.png"', async function() {
+            await driver.get('https://demoqa.com/keyboard-events/');
+            await driver.findElement(By.id('browseFile')).sendKeys('/Users/aga/Desktop/file-upload.png');
+            await driver.findElement(By.id('uploadButton')).click();
+            let alertText = await driver.switchTo().alert().getText();
+            assert.equal(alertText, 'Thanks, you have selected C:\\fakepath\\file-upload.png file to Upload');
+            await driver.switchTo().alert().accept();
+        });
+    });
+
+    describe('Test the Tooltip and Double click', function() {
+        it('After double click on double click button you should see an alert window', async function() {
+            await driver.get('https://demoqa.com/tooltip-and-double-click/');
+            let doubleClickButton = await driver.findElement(By.id('doubleClickBtn'));
+            await actions.doubleClick(doubleClickButton).perform();
+            let alertText = await driver.switchTo().alert().getText();
+            assert.equal(alertText, 'Double Click Alert\n' + '\n' + 'Hi,You are seeing this message as you have double cliked on the button');
+            await driver.switchTo().alert().accept();
+        });
+
+        it('After right-click on right-click button you should see a select menu', async function() {
+            await driver.get('https://demoqa.com/tooltip-and-double-click/');
+            await driver.findElement(By.id('rightClickBtn')).click(Button.RIGHT);
+            await driver.findElement(By.xpath("//div[@id='rightclickItem']/div[2]")).sendKeys();
+            let alertText = await driver.switchTo().alert().getText();
+            assert.equal(alertText, 'You have selected Copy');
+            await driver.switchTo().alert().accept();
+            //Error: element not interactable - WHY?
+        });
+
+        it('After hover over hover element you should see a tooltip', async function() {
+            await driver.get('https://demoqa.com/tooltip-and-double-click/');
+            await actions.move(driver.findElement(By.id('tooltipDemo'))).perform();
+            let tooltipText = await driver.findElement(By.className('tooltiptext')).getText();
+            assert.equal(tooltipText, 'We ask for your age only for statistical purposes.'); 
+            //Assertion Error - WHY?
+        });
+    });
+
+    describe('Test the Slider', function(){
+        it('Slider moves by dragging a mouse to the release point', async function() {
+            await driver.get('https://demoqa.com/slider/');
+            let slideFrom = await driver.findElement(By.className('ui-slider-handle ui-corner-all ui-state-default'));
+            await actions.dragAndDrop(slideFrom, {x:250, y:0}).perform();
+            let slidePercent = await driver.findElement(By.xpath('//div[@id="slider"]/span')).getAttribute('style');
+            assert.equal(slidePercent, 'left: 64%;')
+        });
+
+        it('Slider moves by clicking a bar to the click point', async function() {
+            await driver.get('https://demoqa.com/slider/');
+            await driver.findElement(By.className('ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content')).click();
+            let slidePercent = await driver.findElement(By.xpath('//div[@id="slider"]/span')).getAttribute('style');
+            assert.equal(slidePercent, 'left: 50%;')
+            //possible improvement: add different click point
+        });
+    });
+
+    describe('Test the Selectmenu', function(){
+        it('After selecting `Slower` in drop-down list, `Slower` is visible in the field', async function() {
+            await driver.get('https://demoqa.com/selectmenu/');
+            await driver.findElement(By.id('speed-button')).click();
+            await driver.findElement(By.id('speed-button')).sendKeys('1');
+            let selected = await driver.findElement(By.xpath('//span[@id="speed-button"]/span[2]')).getText();
+            assert.equal(selected, 'Slower');
+        });
+
+        // it('', async function() {
+
+        // });
+
+        // it('', async function() {
+
+        // });
+    });
 
     describe('Test the Dialog', function(){
         it('Dialog window moves to the release point', async function() {
@@ -386,7 +411,7 @@ describe('Testing demoqa.com', function() {
             //add an assert
         });
     });
-
+    
     describe('Test the Datepicker', function(){
         it('After clicking on input field, you should see a calendar with highlighted today’s date', async function() {
             await driver.get('https://demoqa.com/datepicker/');
@@ -415,6 +440,7 @@ describe('Testing demoqa.com', function() {
             assert.equal(pickedDay, '21');
             let isHighlighted = await driver.findElement(By.xpath('//table[@class="ui-datepicker-calendar"]/tbody/tr[3]/td[7]/a')).getAttribute('class');
             assert.equal(isHighlighted, 'ui-state-default ui-state-active ui-state-hover');
+            //assertion error - January != December
         });
 
         it('After writing a date in format 01/14/0030 you should see a calendar with highlighted date 21/12/2030', async function() {
@@ -448,71 +474,50 @@ describe('Testing demoqa.com', function() {
         });
     });
 
-    describe('Test the Keyboard Events', function(){
-        it('After choosing a file and clicking `Click to Upload` button you should see a window with file path: "C:\\fakepath\\file-upload.png"', async function() {
-            await driver.get('https://demoqa.com/keyboard-events/');
-            await driver.findElement(By.id('browseFile')).sendKeys('/Users/aga/Desktop/file-upload.png');
-            await driver.findElement(By.id('uploadButton')).click();
-            let alertText = await driver.switchTo().alert().getText();
-            assert.equal(alertText, 'Thanks, you have selected C:\\fakepath\\file-upload.png file to Upload');
+    describe('Test the Checkboxradio', function(){
+        it('After selecting New York, Paris and London in Radio Group only London is selected', async function() {
+            await driver.get('https://demoqa.com/checkboxradio/');
+            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset/label[1]")).click();
+            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset/label[2]")).click();
+            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset/label[3]")).click();
+            let londonClassActive = await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset/label[3]")).getAttribute('class');
+            let radioCheckboxClassActive = 'ui-checkboxradio-label ui-corner-all ui-button ui-widget ui-checkboxradio-radio-label ui-state-focus ui-visual-focus ui-checkboxradio-checked ui-state-active';
+            assert.equal(londonClassActive, radioCheckboxClassActive);
+        });
+
+        it('After checking 2 Star, 3 Star, 4 Star and 5 Star and unchecking 4 Star in Checkbox only 2 Star, 3 Star and 5 Star are checked', async function() {
+            await driver.get('https://demoqa.com/checkboxradio/');
+            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[2]/label[1]")).click();
+            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[2]/label[2]")).click();
+            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[2]/label[3]")).click();
+            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[2]/label[4]")).click();
+            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[2]/label[3]")).click();
+            let star2ClassActive = await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[2]/label[1]")).getAttribute('class');
+            let star3ClassActive = await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[2]/label[2]")).getAttribute('class');
+            let star5ClassActive = await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[2]/label[4]")).getAttribute('class');
+            let checkboxClassActive = 'ui-checkboxradio-label ui-corner-all ui-button ui-widget ui-checkboxradio-checked ui-state-active';
+            assert.equal(star2ClassActive, checkboxClassActive);
+            assert.equal(star3ClassActive, checkboxClassActive);
+            assert.equal(star5ClassActive, checkboxClassActive);
+        });
+
+        it('After checking 2 Double, 2 Queen, 1 Queen, 1 King and unchecking 2 Double in Checkbox only 2 Queen, 1 Queen and 1 King are checked', async function() {
+            await driver.get('https://demoqa.com/checkboxradio/');
+            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[3]/label[1]")).click();
+            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[3]/label[2]")).click();
+            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[3]/label[3]")).click();
+            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[3]/label[4]")).click();
+            await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[3]/label[1]")).click();
+            let queen2ClassActive = await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[3]/label[2]")).getAttribute('class');
+            let queen1ClassActive = await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[3]/label[3]")).getAttribute('class');
+            let king1ClassActive = await driver.findElement(By.xpath("//div[@id='content']/div[2]/div/fieldset[3]/label[4]")).getAttribute('class');
+            let nestedCheckboxClassActive = 'ui-checkboxradio-label ui-corner-all ui-button ui-widget ui-checkboxradio-checked ui-state-active';
+            assert.equal(queen2ClassActive, nestedCheckboxClassActive);
+            assert.equal(queen1ClassActive, nestedCheckboxClassActive);
+            assert.equal(king1ClassActive, nestedCheckboxClassActive);
         });
     });
-
-    describe('Test the Selectmenu', function(){
-        it('After selecting `Slower` in drop-down list, `Slower` is visible in the field', async function() {
-            await driver.get('https://demoqa.com/selectmenu/');
-            await driver.findElement(By.id('speed-button')).click();
-            await driver.findElement(By.id('speed-button')).sendKeys('1');
-            let selected = await driver.findElement(By.xpath('//span[@id="speed-button"]/span[2]')).getText();
-            assert.equal(selected, 'Slower');
-        });
-
-        // it('', async function() {
-
-        // });
-
-        // it('', async function() {
-
-        // });
-    });
-
-    describe('Test the Resizable', function(){
-        it('The maximum horizontal size ends on right window edge', async function() {
-            await driver.get('https://demoqa.com/resizable/');
-            let webElementFrom = await driver.findElement(By.xpath('//div[@id="resizable"]/div[3]'));
-            await actions.dragAndDrop(webElementFrom, {x:626, y:0}).perform();
-        });
-
-        it('The minimum horizontal size ends on left element’s edge + 10px', async function() {
-            await driver.get('https://demoqa.com/resizable/');
-            let webElementFrom = await driver.findElement(By.xpath('//div[@id="resizable"]/div[3]'));
-            await actions.dragAndDrop(webElementFrom, {x:-125, y:0}).perform();
-        });
-
-        it('The maximum vertical size ends on bottom window edge', async function() {
-            await driver.get('https://demoqa.com/resizable/');
-            let webElementFrom = await driver.findElement(By.xpath('//div[@id="resizable"]/div[3]'));
-            await actions.dragAndDrop(webElementFrom, {x:0, y:251}).perform();
-        });
-
-        it('The minimum vertical size ends on up element’s edge + 10px', async function() {
-            await driver.get('https://demoqa.com/resizable/');
-            let webElementFrom = await driver.findElement(By.xpath('//div[@id="resizable"]/div[3]'));
-            await actions.dragAndDrop(webElementFrom, {x:0, y:-125}).perform();
-        });
-
-        it('The maximum diagonal size ends on right/bottom window angle', async function() {
-            await driver.get('https://demoqa.com/resizable/');
-            let webElementFrom = await driver.findElement(By.xpath('//div[@id="resizable"]/div[3]'));
-            await actions.dragAndDrop(webElementFrom, {x:626, y:251}).perform();
-        });
-
-        it('The minumum diagonal size ends on left/up element’s angle + 10px', async function() {
-            await driver.get('https://demoqa.com/resizable/');
-            let webElementFrom = await driver.findElement(By.xpath('//div[@id="resizable"]/div[3]'));
-            await actions.dragAndDrop(webElementFrom, {x:-125, y:-125}).perform();
-        });
-    });
+    
 
     // describe('', function(){
     //     it('', async function() {
@@ -527,7 +532,6 @@ describe('Testing demoqa.com', function() {
 
     //     });
     // });
-
 
 
     // close the browser after running tests
