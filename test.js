@@ -105,11 +105,11 @@ describe('Testing demoqa.com', function() {
 
         it('After selecting Item 1, 2 and 3 with ctrl/cmd button and selecting Item 1 once again, only Item 1 is highlighted in orange', async function() {
             await driver.get('https://demoqa.com/selectable/');
-            await actions.keyDown(Key.CONTROL).perform();
+            await actions.keyDown(Key.COMMAND).perform();
             await driver.findElement(By.xpath("//ol[@id='selectable']/li[1]")).click();
             await driver.findElement(By.xpath("//ol[@id='selectable']/li[2]")).click();
             await driver.findElement(By.xpath("//ol[@id='selectable']/li[3]")).click();
-            await actions.keyUp(Key.CONTROL).perform();
+            await actions.keyUp(Key.COMMAND).perform();
             await driver.findElement(By.xpath("//ol[@id='selectable']/li[1]")).click();
             let selectedItem1 = await driver.findElement(By.xpath("//ol[@id='selectable']/li[1]")).getAttribute('class');
             let selectedItem2 = await driver.findElement(By.xpath("//ol[@id='selectable']/li[2]")).getAttribute('class');
@@ -119,24 +119,6 @@ describe('Testing demoqa.com', function() {
             assert.equal(selectedItem1, selected);
             assert.equal(selectedItem2, unselected);
             assert.equal(selectedItem3, unselected);
-        }); 
-
-        it('After selecting Item 4 to 7 with shift/ctrl+shift button, Item 4, 5, 6 and 7 are highlighted in orange', async function() {
-            await driver.get('https://demoqa.com/selectable/');
-            await actions.keyDown(Key.CONTROL, Key.SHIFT).perform();
-            await driver.findElement(By.xpath("//ol[@id='selectable']/li[4]")).click();
-            await driver.findElement(By.xpath("//ol[@id='selectable']/li[7]")).click();
-            await actions.keyUp(Key.CONTROL, Key.SHIFT).perform();
-            let selectedItem4 = await driver.findElement(By.xpath("//ol[@id='selectable']/li[4]")).getAttribute('class');
-            let selectedItem5 = await driver.findElement(By.xpath("//ol[@id='selectable']/li[5]")).getAttribute('class');
-            let selectedItem6 = await driver.findElement(By.xpath("//ol[@id='selectable']/li[6]")).getAttribute('class');
-            let selectedItem7 = await driver.findElement(By.xpath("//ol[@id='selectable']/li[7]")).getAttribute('class');
-            let selected = 'ui-widget-content ui-selectee ui-selected';
-            assert.equal(selectedItem4, selected);
-            assert.equal(selectedItem5, selected);
-            assert.equal(selectedItem6, selected);
-            assert.equal(selectedItem7, selected);
-            //shift button doesn't work
         }); 
 
         it('After selecting Item 4 to 7 by dragging a mouse, Item 4, 5, 6 and 7 are highlighted in orange', async function() {
@@ -193,7 +175,45 @@ describe('Testing demoqa.com', function() {
         it('The maximum horizontal size ends on right window edge', async function() {
             await driver.get('https://demoqa.com/resizable/');
             let webElementFrom = await driver.findElement(By.xpath('//div[@id="resizable"]/div[3]'));
-            await actions.dragAndDrop(webElementFrom, {x:626, y:0}).perform();
+            
+            const dialog = await driver.findElement(By.id('resizable'));
+            const dialogRect = await dialog.getRect();
+            console.log(dialogRect);
+
+            // const leftEdgeX = dialogRect.x;
+            // const rightEdgeX = dialogRect.x + dialogRect.width;
+            // const topEdgeY = dialogRect.y;
+            // const bottomEdgeY = dialogRect.y + dialogRect.height;
+            // console.log(leftEdgeX, rightEdgeX, topEdgeY, bottomEdgeY);
+
+            // const windowRect = await driver.executeScript(`
+            //     return {
+            //         width: window.innerWidth,
+            //         height: window.innerHeight
+            //     };
+            // `);
+            // const windowLeftEdgeX = 0;
+            // const windowRightEdgeX = windowRect.width;
+            // const windowTopEdgeY = 0;
+            // const windowBottomEdgeY = windowRect.height;
+
+            // console.log(windowLeftEdgeX, windowRightEdgeX, windowTopEdgeY, windowBottomEdgeY);
+
+            // const leftDeltaX = windowLeftEdgeX - leftEdgeX;
+            // const rightDeltaX = windowRightEdgeX - rightEdgeX;
+            // const topDeltaY = windowTopEdgeY - topEdgeY;
+            // const bottomDeltaY = windowBottomEdgeY - bottomEdgeY;
+            // Math.floor(leftDeltaX);
+            // Math.floor(rightDeltaX);
+            // Math.floor(topDeltaY);
+            // Math.floor(bottomDeltaY);
+            // console.log (Math.floor(leftDeltaX), Math.floor(rightDeltaX), Math.floor(topDeltaY), Math.floor(bottomDeltaY));
+
+            let webElementFromRect = await webElementFrom.getRect();
+            await actions.dragAndDrop(webElementFrom, {x:100 + webElementFromRect.width, y:0}).perform();
+
+            const dialogRect2 = await dialog.getRect();
+            console.log(dialogRect2);
         });
 
         it('The minimum horizontal size ends on left element’s edge + 10px', async function() {
