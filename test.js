@@ -2,6 +2,7 @@ require('chromedriver');
 const assert = require('assert');
 const {Builder, Key, By, until, Button} = require('selenium-webdriver');
 
+
 describe('Testing demoqa.com', function() {
     let driver;
     before(async function() {
@@ -12,7 +13,8 @@ describe('Testing demoqa.com', function() {
     beforeEach(async function() {
         actions = await driver.actions();
     });
-    
+
+   
     describe('Test title, internal and external links', function() {
 
         it('After opening demoqa.com you get the correct title', async function() {
@@ -361,14 +363,6 @@ describe('Testing demoqa.com', function() {
             let selected = await driver.findElement(By.xpath('//span[@id="speed-button"]/span[2]')).getText();
             assert.equal(selected, 'Slower');
         });
-
-        // it('', async function() {
-
-        // });
-
-        // it('', async function() {
-
-        // });
     });
 
     describe('Test the Dialog', function(){
@@ -376,7 +370,9 @@ describe('Testing demoqa.com', function() {
             await driver.get('https://demoqa.com/dialog/');
             let moveFrom = await driver.findElement(By.id('ui-id-1'));
             await actions.dragAndDrop(moveFrom, {x:-587, y:-296}).perform();
-            //add an assert
+            let windowOnPosition = await driver.findElement(By.className('ui-dialog')).getAttribute('style');
+            assert.equal(windowOnPosition, 'position: absolute; height: auto; width: 300px; top: 0px; left: 0px; display: block;');
+            //possible improvement: assert takes only top and left px information
         });
 
         it('Size of dialog window is changed horizontally and vertically in all four directions', async function() {
@@ -385,11 +381,32 @@ describe('Testing demoqa.com', function() {
             let resizeLeft = await driver.findElement(By.className('ui-resizable-handle ui-resizable-w'));
             let resizeUp = await driver.findElement(By.className('ui-resizable-handle ui-resizable-n'));
             let resizeDown = await driver.findElement(By.className('ui-resizable-handle ui-resizable-s'));
-            await actions.dragAndDrop(resizeRight, {x:400, y:0})
-            .dragAndDrop(resizeLeft, {x:-300, y:0})
-            .dragAndDrop(resizeUp, {x:0, y:-200})
-            .dragAndDrop(resizeDown, {x:0, y:200}).perform();
-            //add an assert
+            
+            const dialog = await driver.findElement(By.className('ui-dialog'));
+            const dialogRect = await dialog.getRect();
+            console.log(dialogRect);
+            
+            // const windowRect = await driver.executeScript(`
+            //     return {
+            //         width: window.innerWidth,
+            //         height: window.innerHeight
+            //     };
+            // `);
+            // const windowLeftEdgeX = 0;
+            // const windowRightEdgeX = windowRect.width;
+            // const windowTopEdgeY = 0;
+            // const windowBottomEdgeY = windowRect.height;
+            // console.log(windowLeftEdgeX, windowRightEdgeX, windowTopEdgeY, windowBottomEdgeY);
+
+            await actions.dragAndDrop(resizeRight, {x:100, y:0})
+            .dragAndDrop(resizeLeft, {x:-100, y:0})
+            .dragAndDrop(resizeUp, {x:0, y:-100})
+            .dragAndDrop(resizeDown, {x:0, y:100}).perform();
+
+            const dialogRect2 = await dialog.getRect();
+            console.log(dialogRect2);
+
+            assert.deepEqual(dialogRect2, { height: 319, width: 484, x: 350, y: 194.5 });
         });
 
         it('Size of dialog window is changed diagonally in all four directions', async function() {
@@ -398,17 +415,28 @@ describe('Testing demoqa.com', function() {
             let resizeRightUp = await driver.findElement(By.className('ui-resizable-handle ui-resizable-ne'));
             let resizeLeftDown = await driver.findElement(By.className('ui-resizable-handle ui-resizable-nw'));
             let resizeLeftUp = await driver.findElement(By.className('ui-resizable-handle ui-resizable-sw'));
-            await actions.dragAndDrop(resizeRightDown, {x:50, y:50})
+            
+            const dialog = await driver.findElement(By.className('ui-dialog'));
+            const dialogRect = await dialog.getRect();
+            console.log(dialogRect);
+            
+            await actions.dragAndDrop(resizeRightDown, {x:100, y:100})
             .dragAndDrop(resizeRightUp, {x:100, y:-100})
-            .dragAndDrop(resizeLeftDown, {x:-100, y:50})
+            .dragAndDrop(resizeLeftDown, {x:-100, y:100})
             .dragAndDrop(resizeLeftUp, {x:-100, y:-100}).perform();
-            //add an assert
+
+            const dialogRect2 = await dialog.getRect();
+            console.log(dialogRect2);
+
+            assert.deepEqual(dialogRect2, { height: 150, width: 668, x: 250, y: 294.5 });
         });
         
-        it(' After closing the dialog window with `x` icon, the window is not visible any more', async function() {
+        it('After closing the dialog window with `x` icon, the window is not visible any more', async function() {
             await driver.get('https://demoqa.com/dialog/');
             await driver.findElement(By.xpath("//div[@class='ui-dialog-titlebar ui-corner-all ui-widget-header ui-helper-clearfix ui-draggable-handle']/button")).click();
-            //add an assert
+            let windowClosed = await driver.findElement(By.className('ui-dialog')).getAttribute('style');
+            assert.equal(windowClosed, 'position: absolute; height: auto; width: 300px; top: 294.5px; left: 450px; display: none;');
+            //possible improvement: take only part of style text: 'display: none'
         });
     });
     
