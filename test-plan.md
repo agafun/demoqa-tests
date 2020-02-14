@@ -80,5 +80,5 @@ Operation system is MacOS Catalina version 10.15.2.
 | Title | Author | Description |
 | ------ | ------- | --- |
 | Test plan | Agnieszka Burczyk | Object, approach and schedule of all testing activities of the website [demoqa.com](https://demoqa.com) |
-| Test suite | Agnieszka Burczyk | A list of test cases with expexted results, reproduction steps and potential problems |
+| Test suite | Agnieszka Burczyk | A list of test cases with expected results, reproduction steps and actual problems and errors |
 | Test tool | Agnieszka Burczyk | A script which runs all test cases |

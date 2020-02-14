@@ -2,7 +2,8 @@
 
 [demoqa.com](https://demoqa.com) is a basic demo site provided by [toolsqa.com](https://www.toolsqa.com) to learn and practice Selenium. It contains training modules like contact forms, menus to select, buttons to click etc.
 
-More details about the object, approach, features to be tested and schedule of all testing activities are to find in [Test Plan](https://github.com/agafun/demoqa-tests/blob/master/test-plan.md).
+## [Test Plan](test-plan.md)
+More details about the object, approach, features to be tested and are to find in [Test Plan](test-plan.md).
 
 ## Methods
 In these automated tests I have used a combination of Selenium WebDriver with Java Script. I have learned many methods like:
@@ -29,7 +30,11 @@ move()
 
 ## Tests
 
-There are 38 test cases presented in this [Test Suite](https://github.com/agafun/demoqa-tests/blob/master/test-suite.md). 32 are passed and 6 are failed through assertion errors (5) or NoSuchAlertError (1).  
+### [Test Suite](test-suite.md)
+
+There are 38 test cases with expected results, reproduction steps and actual problems are presented in the [Test Suite](test-suite.md).
+
+### Results
 
 Below video record presents the test script execution:
 
@@ -92,139 +97,6 @@ Testing demoqa.com
 
   32 passing (41s)
   6 failing
-
-  1) Testing demoqa.com
-       Test the Resizable
-         The element is resized horizontally by 100 px:
-
-      AssertionError [ERR_ASSERTION]: 233 == 250
-      + expected - actual
-
-      -233
-      +250
-      
-      at Context.<anonymous> (test.js:169:20)
-      at processTicksAndRejections (internal/process/task_queues.js:93:5)
-
-  2) Testing demoqa.com
-       Test the Resizable
-         The element is resized horizontally by 200 px:
-
-      AssertionError [ERR_ASSERTION]: 333 == 350
-      + expected - actual
-
-      -333
-      +350
-      
-      at Context.<anonymous> (test.js:181:20)
-      at processTicksAndRejections (internal/process/task_queues.js:93:5)
-
-  3) Testing demoqa.com
-       Test the Resizable
-         The element is resized diagonally to the minimum size:
-
-      AssertionError [ERR_ASSERTION]: 17 == 10
-      + expected - actual
-
-      -17
-      +10
-      
-      at Context.<anonymous> (test.js:191:20)
-      at processTicksAndRejections (internal/process/task_queues.js:93:5)
-
-  4) Testing demoqa.com
-       Test the Tooltip and Double click
-         After right-click on right-click button you should see a select menu:
-     NoSuchAlertError: no such alert
-  (Session info: chrome=80.0.3987.106)
-      at Object.throwDecodedError (node_modules/selenium-webdriver/lib/error.js:550:15)
-      at parseHttpResponse (node_modules/selenium-webdriver/lib/http.js:563:13)
-      at Executor.execute (node_modules/selenium-webdriver/lib/http.js:489:26)
-      at processTicksAndRejections (internal/process/task_queues.js:93:5)
-      at async Driver.execute (node_modules/selenium-webdriver/lib/webdriver.js:699:17)
-      at async Context.<anonymous> (test.js:281:29)
-
-  5) Testing demoqa.com
-       Test the Dialog
-         Size of dialog window is changed horizontally and vertically in all four directions:
-
-      AssertionError [ERR_ASSERTION]: Expected values to be loosely deep-equal:
-
-{
-  height: 319,
-  width: 484,
-  x: 350,
-  y: 172.5
-}
-
-should loosely deep-equal
-
-{
-  height: 319,
-  width: 484,
-  x: 350,
-  y: 194.5
-}
-      + expected - actual
-
-       {
-         "height": 319
-         "width": 484
-         "x": 350
-      -  "y": 172.5
-      +  "y": 194.5
-       }
-      
-      at Context.<anonymous> (test.js:342:20)
-      at processTicksAndRejections (internal/process/task_queues.js:93:5)
-
-  6) Testing demoqa.com
-       Test the Dialog
-         Size of dialog window is changed diagonally in all four directions:
-
-      AssertionError [ERR_ASSERTION]: Expected values to be loosely deep-equal:
-
-{
-  height: 150,
-  width: 668,
-  x: 250,
-  y: 272.5
-}
-
-should loosely deep-equal
-
-{
-  height: 150,
-  width: 668,
-  x: 250,
-  y: 294.5
-}
-      + expected - actual
-
-       {
-         "height": 150
-         "width": 668
-         "x": 250
-      -  "y": 272.5
-      +  "y": 294.5
-       }
-      
-      at Context.<anonymous> (test.js:363:20)
-      at processTicksAndRejections (internal/process/task_queues.js:93:5)
-
-
-
-npm ERR! code ELIFECYCLE
-npm ERR! errno 6
-npm ERR! demoqa-tests@1.0.0 test: `mocha --recursive --timeout 20000 test.js`
-npm ERR! Exit status 6
-npm ERR! 
-npm ERR! Failed at the demoqa-tests@1.0.0 test script.
-npm ERR! This is probably not a problem with npm. There is likely additional logging output above.
-
-npm ERR! A complete log of this run can be found in:
-npm ERR!     /Users/aga/.npm/_logs/2020-02-14T12_03_53_864Z-debug.log
-The terminal process terminated with exit code: 6
 ```
 
 
