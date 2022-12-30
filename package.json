@@ -10,7 +10,7 @@
   "license": "MIT",
   "devDependencies": {
     "chromedriver": "^79.0.0",
-    "mocha": "^6.2.2",
+    "mocha": "^10.2.0",
     "selenium-webdriver": "^4.0.0-alpha.5"
   }
 }
